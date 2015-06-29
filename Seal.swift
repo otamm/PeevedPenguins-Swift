@@ -6,8 +6,14 @@
 //  Copyright (c) 2015 Apportable. All rights reserved.
 //
 
-import UIKit
+import UIKit;
 
 class Seal: CCSprite {
    
+    /* cocos2d methods */
+    
+    // Automatically executed when any seal sprite is loaded (new instance of Seal class is created).
+    func didLoadFromCCB() {
+        println("Seal created!")
+    }
 }

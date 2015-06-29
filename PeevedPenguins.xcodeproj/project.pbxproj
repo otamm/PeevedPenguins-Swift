@@ -440,9 +440,9 @@
 			children = (
 				7A40362019DDEF0D007B6E8F /* Platforms */,
 				7A046D7519E84C36004C4763 /* MainScene.swift */,
-				D352B48019EC608A00829775 /* MetalShaders */,
 				AA6423311B40D5E900EAA782 /* Seal.swift */,
 				AA6423371B40D5FC00EAA782 /* Penguin.swift */,
+				D352B48019EC608A00829775 /* MetalShaders */,
 			);
 			name = Source;
 			sourceTree = "<group>";
