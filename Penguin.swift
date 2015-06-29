@@ -10,10 +10,10 @@ import UIKit;
 
 class Penguin: CCSprite {
     
-    /* cocos 2d methods */
+    /* cocos2d methods */
     
     // Automatically executed when any penguin sprite is loaded (new instance of Penguin class is created).
     func didLoadFromCCB() {
-        println("Penguin created!")
+        println("Penguin created!");
     }
 }

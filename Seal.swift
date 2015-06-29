@@ -14,6 +14,6 @@ class Seal: CCSprite {
     
     // Automatically executed when any seal sprite is loaded (new instance of Seal class is created).
     func didLoadFromCCB() {
-        println("Seal created!")
+        println("Seal created!");
     }
 }
