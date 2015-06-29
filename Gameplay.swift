@@ -42,6 +42,11 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
     // physics joint used to fixate the penguin in the catapultArm while it's not launched.
     var penguinCatapultJoint:CCPhysicsJoint?;
     
+    // holds camera action to be executed; follow penguin when one is launched, focus back on catapult when an attempt is over.
+    var actionFollow:CCActionFollow?;
+    
+    // minimum speed a penguin must have to not end a round.
+    let minSpeed:CGFloat = CGFloat(5);
     
     /*** methods ***/
     
@@ -53,7 +58,7 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
         let level1 = CCBReader.load("Levels/Level1");
         self.levelNode.addChild(level1);
         // visualize physics bodies & joints
-        self.gamePhysicsNode.debugDraw = true;
+        //self.gamePhysicsNode.debugDraw = true;
         // the collisionMask arrays determines which objects will collide with the node; the pullback node is invisible and serves as a point of the pivot joint to keep the catapult arm steady, so nothing should collide with it.
         self.pullbackNode.physicsBody.collisionMask = [];
         self.mouseJointNode.physicsBody.collisionMask = [];
@@ -81,6 +86,33 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
         }
     }
     
+    // called on every frame
+    override func update(delta: CCTime) {
+        //if let currentPenguin = self.currentPenguin {
+        if (self.currentPenguin != nil) {
+            // will check for 'launched' property before executing all the other checks, optimizing performance.
+            if (self.currentPenguin!.launched) {
+                // if speed is below minimum speed, assume this attempt is over
+                if ccpLength(currentPenguin!.physicsBody.velocity) < self.minSpeed {
+                    self.nextAttempt();
+                    return;
+                }
+                // if penguin is out of the scene's horizontal bounds, attempt is over.
+                let xMin = self.currentPenguin!.boundingBox().origin.x;
+                if (xMin < self.boundingBox().origin.x) {
+                    self.nextAttempt();
+                    return;
+                }
+            
+                let xMax = xMin + self.currentPenguin!.boundingBox().size.width;
+                if xMax > (boundingBox().origin.x + boundingBox().size.width) {
+                    self.nextAttempt();
+                    return;
+                }
+            }
+        }
+    }
+    
     /* iOS methods */
     
     // called on every touch in this scene
@@ -94,24 +126,24 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
             self.mouseJointNode.position = touchLocation;
             
             // setup a spring joint between the mouseJointNode and the catapultArm
-            mouseJoint = CCPhysicsJoint.connectedSpringJointWithBodyA(mouseJointNode.physicsBody, bodyB: catapultArm.physicsBody, anchorA: CGPointZero, anchorB: CGPoint(x: 34, y: 138), restLength: 0, stiffness: 3000, damping: 150);
+            self.mouseJoint = CCPhysicsJoint.connectedSpringJointWithBodyA(mouseJointNode.physicsBody, bodyB: catapultArm.physicsBody, anchorA: CGPointZero, anchorB: CGPoint(x: 34, y: 138), restLength: 0, stiffness: 3000, damping: 150);
             
             // create a penguin from the ccb-file
             self.currentPenguin = CCBReader.load("Penguin") as! Penguin?;
             
-            if let currentPenguin = self.currentPenguin {
+            if (self.currentPenguin != nil) {
                 // initially position it on the scoop. 34,138 is the position in the node space of the catapultArm
                 let penguinPosition = self.catapultArm.convertToWorldSpace(CGPoint(x: 34, y: 138));
                 // transform the world position to the node space to which the penguin will be added (gamePhysicsNode)
-                currentPenguin.position = self.gamePhysicsNode.convertToNodeSpace(penguinPosition);
+                self.currentPenguin!.position = self.gamePhysicsNode.convertToNodeSpace(penguinPosition);
                 
                 // add it to the physics world
-                self.gamePhysicsNode.addChild(currentPenguin);
+                self.gamePhysicsNode.addChild(self.currentPenguin);
                 // we don't want the penguin to rotate in the scoop
-                currentPenguin.physicsBody.allowsRotation = false
+                self.currentPenguin!.physicsBody.allowsRotation = false
                 
                 // create a joint to keep the penguin fixed to the scoop until the catapult is released
-                self.penguinCatapultJoint = CCPhysicsJoint.connectedPivotJointWithBodyA(currentPenguin.physicsBody, bodyB: self.catapultArm.physicsBody, anchorA: currentPenguin.anchorPointInPoints);
+                self.penguinCatapultJoint = CCPhysicsJoint.connectedPivotJointWithBodyA(self.currentPenguin!.physicsBody, bodyB: self.catapultArm.physicsBody, anchorA: self.currentPenguin!.anchorPointInPoints);
             }
         }
         //self.launchPenguin();
@@ -139,9 +171,10 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
     // loads a Penguin.ccb as a Penguin class instance, makes it into a physics object and applies force according to how the catapult is being manipulated.
     func launchPenguin() {
         // loads the Penguin.ccb we have set up in SpriteBuilder
-        let penguin = CCBReader.load("Penguin") as! Penguin; // loads as a Penguin class instance
+        //let penguin = CCBReader.load("Penguin") as! Penguin; // loads as a Penguin class instance
+        let penguin = self.currentPenguin!;
         // position the penguin at the bowl of the catapult
-        penguin.position = ccpAdd(catapultArm.position, CGPoint(x: 16, y: 50))
+        penguin.position = ccpAdd(self.catapultArm.position, CGPoint(x: 16, y: 50))
         
         // add the penguin to the gamePhysicsNode (because the penguin has physics enabled)
         self.gamePhysicsNode.addChild(penguin);
@@ -173,8 +206,11 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
             self.currentPenguin?.physicsBody.allowsRotation = true;
             
             // follow the flying penguin
-            let actionFollow = CCActionFollow(target: self.currentPenguin, worldBoundary: self.boundingBox());
+            self.actionFollow = CCActionFollow(target: self.currentPenguin, worldBoundary: self.boundingBox());
             self.contentNode.runAction(actionFollow);
+            
+            // set penguin 'launched' attribute to true
+            self.currentPenguin?.launched = true;
         }
     }
     
@@ -191,5 +227,15 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
         seal.parent.addChild(explosion);
         // finally, remove the seal from the level
         seal.removeFromParent();
+    }
+    
+    // executed after the penguin is launched, the destruction is caused (or not) and the round is assumed to be over
+    func nextAttempt() {
+        self.contentNode.stopAction(actionFollow); // kills action to focus on level space (where the currentPenguin is)
+        self.currentPenguin = nil; // once attempt is completed, there is no "current penguin"
+        
+        let actionMoveTo = CCActionMoveTo(duration: 1, position: CGPoint.zeroPoint); // focus on scene beginning
+        println("C?");
+        self.contentNode.runAction(actionMoveTo); // moves camera to scene beginning
     }
 }

@@ -9,6 +9,10 @@
 import UIKit;
 
 class Penguin: CCSprite {
+    /* custom variables */
+    
+    // check if penguin is launched; initially set to false.
+    var launched:Bool = false;
     
     /* cocos2d methods */
     
