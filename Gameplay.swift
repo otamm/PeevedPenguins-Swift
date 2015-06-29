@@ -68,7 +68,17 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
     
     // parameter "seal" derived from collision name "seal". Method triggered after seal collides with any other physics object.
     func ccPhysicsCollisionPostSolve(pair: CCPhysicsCollisionPair!, seal: CCNode!, wildcard: CCNode!) {
-        println("Something collided with a seal.");
+        //println("Something collided with a seal.");
+        let energy = pair.totalKineticEnergy; // retrieving kinect energy of collision between seal and another object
+        
+        // if energy is large enough, remove the seal.
+        if (energy > 5000) {
+            // .space() and .addPostStepBlock() ensure that the code within the code block being passed to the .addPostStepBlock will be only executed once in case that two objects trigger the method at the same frame (e.g. a seal collides hard enough with two objects at once). Cocos2d will only run the code block once per key and/or frame.
+            self.gamePhysicsNode.space.addPostStepBlock({ () -> Void in
+                self.sealRemoved(seal);
+                return; // implicitly returning value of expression above, 'return' here is used to guarantee a Void return type.
+                }, key: seal);
+        }
     }
     
     /* iOS methods */
@@ -166,5 +176,11 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
             let actionFollow = CCActionFollow(target: self.currentPenguin, worldBoundary: self.boundingBox());
             self.contentNode.runAction(actionFollow);
         }
+    }
+    
+    // removes seal after strong enough collision
+    func sealRemoved(seal: CCNode) {
+        seal.removeFromParent();
+        println("SEAL IS KILL");
     }
 }
