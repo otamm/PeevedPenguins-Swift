@@ -63,6 +63,7 @@
 		AA64234A1B40F4C100EAA782 /* MainScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6423491B40F4C100EAA782 /* MainScene.swift */; };
 		AA6423521B412A4400EAA782 /* Seal.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6423511B412A4400EAA782 /* Seal.swift */; };
 		AA6423541B412A4C00EAA782 /* Penguin.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6423531B412A4C00EAA782 /* Penguin.swift */; };
+		AA6423561B41351A00EAA782 /* Gameplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6423551B41351A00EAA782 /* Gameplay.swift */; };
 		B71F5911188484E7003F4D28 /* iPad-old.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5907188484E7003F4D28 /* iPad-old.png */; };
 		B71F5912188484E7003F4D28 /* iPad-old@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5908188484E7003F4D28 /* iPad-old@2x.png */; };
 		B71F5913188484E7003F4D28 /* iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = B71F5909188484E7003F4D28 /* iPad.png */; };
@@ -176,6 +177,7 @@
 		AA6423491B40F4C100EAA782 /* MainScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainScene.swift; path = Source/MainScene.swift; sourceTree = "<group>"; };
 		AA6423511B412A4400EAA782 /* Seal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Seal.swift; sourceTree = "<group>"; };
 		AA6423531B412A4C00EAA782 /* Penguin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Penguin.swift; sourceTree = "<group>"; };
+		AA6423551B41351A00EAA782 /* Gameplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Gameplay.swift; sourceTree = "<group>"; };
 		B71F5907188484E7003F4D28 /* iPad-old.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPad-old.png"; path = "Icons/iPad-old.png"; sourceTree = "<group>"; };
 		B71F5908188484E7003F4D28 /* iPad-old@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iPad-old@2x.png"; path = "Icons/iPad-old@2x.png"; sourceTree = "<group>"; };
 		B71F5909188484E7003F4D28 /* iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPad.png; path = Icons/iPad.png; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 			children = (
 				7A40362019DDEF0D007B6E8F /* Platforms */,
 				AA6423491B40F4C100EAA782 /* MainScene.swift */,
+				AA6423551B41351A00EAA782 /* Gameplay.swift */,
 				AA6423511B412A4400EAA782 /* Seal.swift */,
 				AA6423531B412A4C00EAA782 /* Penguin.swift */,
 				D352B48019EC608A00829775 /* MetalShaders */,
@@ -817,6 +820,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA6423541B412A4C00EAA782 /* Penguin.swift in Sources */,
+				AA6423561B41351A00EAA782 /* Gameplay.swift in Sources */,
 				B73789871807631A0076A88C /* main.m in Sources */,
 				AA64234A1B40F4C100EAA782 /* MainScene.swift in Sources */,
 				AA6423521B412A4400EAA782 /* Seal.swift in Sources */,
