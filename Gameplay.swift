@@ -66,6 +66,11 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
         CCDirector.sharedDirector().presentScene(gameplayScene);
     }
     
+    // parameter "seal" derived from collision name "seal". Method triggered after seal collides with any other physics object.
+    func ccPhysicsCollisionPostSolve(pair: CCPhysicsCollisionPair!, seal: CCNode!, wildcard: CCNode!) {
+        println("Something collided with a seal.");
+    }
+    
     /* iOS methods */
     
     // called on every touch in this scene
