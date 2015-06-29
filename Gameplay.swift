@@ -180,7 +180,16 @@ class Gameplay:CCNode, CCPhysicsCollisionDelegate {
     
     // removes seal after strong enough collision
     func sealRemoved(seal: CCNode) {
-        seal.removeFromParent();
         println("SEAL IS KILL");
+        // load particle effect, animation runs as soon as file is loaded
+        let explosion = CCBReader.load("SealExplosion") as! CCParticleSystem;
+        // make the particle effect clean itself up, once it is completed
+        explosion.autoRemoveOnFinish = true;
+        // place the particle effect animation on the seal's exact position
+        explosion.position = seal.position;
+        // add the particle effect to the same node the seal is on
+        seal.parent.addChild(explosion);
+        // finally, remove the seal from the level
+        seal.removeFromParent();
     }
 }
