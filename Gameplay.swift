@@ -20,6 +20,9 @@ class Gameplay:CCNode {
     // space where level CCB file will be loaded.
     weak var levelNode:CCNode!;
     
+    // content node to hold all elements except for the UI ones.
+    weak var contentNode:CCNode!;
+    
     /* cocos2d methods */
     
     // called when CCB file has completed loading
@@ -27,6 +30,14 @@ class Gameplay:CCNode {
         self.userInteractionEnabled = true;
         let level1 = CCBReader.load("Levels/Level1");
         self.levelNode.addChild(level1);
+        // visualize physics bodies & joints
+        self.gamePhysicsNode.debugDraw = true
+    }
+    
+    // code to be triggered when reset button is pressed; Gameplay scene is reloaded.
+    func reset() {
+        let gameplayScene = CCBReader.loadAsScene("Gameplay");
+        CCDirector.sharedDirector().presentScene(gameplayScene);
     }
     /* iOS methods */
     
@@ -54,6 +65,7 @@ class Gameplay:CCNode {
         // ensure followed object is in visible are when starting
         self.position = CGPoint.zeroPoint;
         let actionFollow = CCActionFollow(target: penguin, worldBoundary: boundingBox());
-        self.runAction(actionFollow);
+        //self.runAction(actionFollow); will follow penguin, but UI elements would stay behind.
+        self.contentNode.runAction(actionFollow);
     }
 }
